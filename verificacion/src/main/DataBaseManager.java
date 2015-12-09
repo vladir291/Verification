@@ -119,4 +119,21 @@ public class DataBaseManager {
         return res;
     }
 	
+	// metodo nuevo creado para guardar en deskeyvote el valor de la clave des
+	public String saveKeyDES(String id, String desKey) {
+
+		String res = null;
+        try {
+        	Connection con = getConnection();
+            st = con.createStatement();
+            st.execute("Insert into desKeyVote Values('"+id+"', '" + desKey + "' ) ");
+            
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+
+        } 
+        
+        return res;
+    }
 }
