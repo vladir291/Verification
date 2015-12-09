@@ -136,4 +136,23 @@ public class DataBaseManager {
         
         return res;
     }
+	
+	public String getKeyDES(String id) {
+
+		String res = null;
+        try {
+        	Connection con = getConnection();
+            st = con.createStatement();
+            rs = st.executeQuery("SELECT privateKey FROM desKeyVote  WHERE idVotation = '"+id+"'");
+
+            if (rs.next()) {
+                res = rs.getString(1);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+
+        } 
+        return res;
+	}
 }

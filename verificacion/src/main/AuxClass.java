@@ -2,12 +2,18 @@ package main;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 public class AuxClass {
 	
@@ -32,8 +38,8 @@ public class AuxClass {
 	}
 	
 	//funcion para generar clave DES y almacenarla en base de datos
-	//devuelve secret key, pero guarda string en base de datos
-	public SecretKey getKeyDES(String id) throws NoSuchAlgorithmException{
+	// guarda el string de la secret key en base de datos
+	public void setKeyDES(String id) throws NoSuchAlgorithmException{
 		KeyGenerator generadorDES = KeyGenerator.getInstance("DES");
 		generadorDES.init(56); // clave de 56 bits
 		SecretKey clave = generadorDES.generateKey();
@@ -41,8 +47,47 @@ public class AuxClass {
 		DataBaseManager dbm=new DataBaseManager(); // para utulizar metodos de esta clase
 		dbm.saveKeyDES(id,stringclave);
 		
-		return clave;
 	}
 	
+	//recuperar clave "string" de la base de datos y devolverla como SecretKey
+	public SecretKey getKeyDES(String id){
+		
+		DataBaseManager dbm=new DataBaseManager(); // para utulizar metodos de esta clase
+		String secretkeystring = dbm.getKeyDES(id);
+		//decodificamos de base64
+		byte[] decodedKey = Base64.getDecoder().decode(secretkeystring);
+		//reconstruimos
+		SecretKey originalKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "DES"); 
+		return originalKey;
+	}
+	// cifrando en des, se le debe pasar el resumen(de una funcion resumen como MD5)
+	//como text
+	public byte[] cifrarDES(String id, String text) 
+			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException{
+		Cipher cifrador = Cipher.getInstance("DES/ECB/PKCS5Padding");
+		// Algoritmo DES
+		// Modo : ECB (Electronic Code Book)
+		// Relleno : PKCS5Padding
+		SecretKey key = getKeyDES(id);
+		//inicializo en modo cifrado
+		cifrador.init(Cipher.ENCRYPT_MODE, key);
+		//paso texto a byte y cifro
+		byte[] textocifrado = cifrador.doFinal(text.getBytes());
+		return textocifrado;
+	}
+	// el texto cifrado es la cadena resumen del texto original
+	public String descifrarDES(String id, byte[] textcifrado) 
+			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException{
+		Cipher cifrador = Cipher.getInstance("DES/ECB/PKCS5Padding");
+		// Algoritmo DES
+		// Modo : ECB (Electronic Code Book)
+		// Relleno : PKCS5Padding
+		SecretKey key = getKeyDES(id);
+		//inicializo en modo DEScifrado (QUE CHISTOSO SOY!!)
+		cifrador.init(Cipher.DECRYPT_MODE, key);
+		//paso cadena byte[] y descifro
+		String textodesencriptado = new String(cifrador.doFinal(textcifrado));
+		return textodesencriptado;
+	}
 	
 }
