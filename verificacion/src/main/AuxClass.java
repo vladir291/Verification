@@ -37,6 +37,26 @@ public class AuxClass {
 		
 	}
 	
+	//funcion resumen con SHA-1 (text indica el texto que se le aplicara la función resumen)
+	//hay que pasarle el texto, no el atajo
+	public byte[] getHashCodeSHA(String text) throws IOException, NoSuchAlgorithmException{
+		/* Crear funcion resumen */
+		MessageDigest md = MessageDigest.getInstance("SHA"); // Usa SHA-1
+		/* Leer fichero de 1k en 1k y pasar fragmentos leidos a la funcion resumen */
+		byte[] buffer = new byte[1000];
+		FileInputStream in = new FileInputStream(text);
+		int leidos = in.read(buffer, 0, 1000);
+		while (leidos != -1) {
+			md.update(buffer, 0 , leidos); // Pasa texto claro a la funcion resumen
+			leidos = in.read(buffer, 0, 1000);
+		}
+		in.close();
+			
+		byte[] resumen = md.digest(); // Completar el resumen
+		return resumen;
+			
+	}
+	
 	//funcion para generar clave DES y almacenarla en base de datos
 	// guarda el string de la secret key en base de datos
 	public void setKeyDES(String id) throws NoSuchAlgorithmException{
