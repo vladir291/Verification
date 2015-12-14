@@ -8,8 +8,4 @@ org.eclipse.jdt.core.compiler.debug.localVariable=generate
 org.eclipse.jdt.core.compiler.debug.sourceFile=generate
 org.eclipse.jdt.core.compiler.problem.assertIdentifier=error
 org.eclipse.jdt.core.compiler.problem.enumIdentifier=error
-<<<<<<< HEAD
-org.eclipse.jdt.core.compiler.problem.forbiddenReference=warning
-=======
->>>>>>> 08a01c66ac27d673c39905abf91daec69fb88cff
 org.eclipse.jdt.core.compiler.source=1.7
