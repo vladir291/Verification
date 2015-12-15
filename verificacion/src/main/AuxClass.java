@@ -93,7 +93,7 @@ public class AuxClass {
 	}
 	// cifrando en des, se le debe pasar el resumen(de una funcion resumen como MD5)
 	//como text
-	public byte[] cifrarDES(String id, String text) 
+	public byte[] cifrarDES(String id, byte[] text) 
 			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException{
 		Cipher cifrador = Cipher.getInstance("DES/ECB/PKCS5Padding");
 		// Algoritmo DES
@@ -103,7 +103,7 @@ public class AuxClass {
 		//inicializo en modo cifrado
 		cifrador.init(Cipher.ENCRYPT_MODE, key);
 		//paso texto a byte y cifro
-		byte[] textocifrado = cifrador.doFinal(text.getBytes());
+		byte[] textocifrado = cifrador.doFinal(text);
 		return textocifrado;
 	}
 	// el texto cifrado es la cadena resumen del texto original
