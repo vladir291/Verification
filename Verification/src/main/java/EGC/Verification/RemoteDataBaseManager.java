@@ -19,7 +19,7 @@ public class RemoteDataBaseManager {
 			privateKey = URLEncoder.encode(privateKey, "UTF-8");
 	        URL url;
 			
-			url = new URL("http://egcprueba.esy.es/default2.php");
+			url = new URL("http://veriegc.esy.es/default2.php");
 			
 	        URLConnection connection = url.openConnection();
 	        connection.setDoOutput(true);
@@ -57,7 +57,7 @@ public class RemoteDataBaseManager {
 
 		try{
 			
-			url = new URL("http://egcprueba.esy.es/default.php?id="+id);
+			url = new URL("http://veriegc.esy.es/default.php?id="+id);
 		}
 		catch (MalformedURLException e){
 			
