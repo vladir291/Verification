@@ -7,33 +7,10 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
 
 public class AuthorityImpl implements Authority {
 
-	public boolean postKeyRSA(String id) {
-		boolean result;
-
-		result = AuxClass.postKeyRSA(id);
-
-		return result;
-	}
-
-	public String getPublicKeyRSA(String id) {
-		String result;
-
-		result = AuxClass.getPublicKeyRSA(id);
-
-		return result;
-	}
-
-	public String getPrivateKeyRSA(String id) {
-		String result;
-
-		result = AuxClass.getPrivateKeyRSA(id);
-
-		return result;
-	}
+	
 
 	public boolean checkVoteRSA(byte[] votoCifrado, String id) {
 		boolean result;
@@ -43,20 +20,12 @@ public class AuthorityImpl implements Authority {
 		return result;
 	}
 
-	public byte[] encryptRSA(String idVote, String textToEncypt, int option)
+	public byte[] encryptRSA(String idVote, String textToEncypt)
 			throws NoSuchAlgorithmException, IOException {
 		byte[] result = null;
-		byte[] resumen = null;
 
-		switch (option) {
-		case 1:
-			resumen = AuxClass.getHashCodeMD5(textToEncypt);
-			result = AuxClass.encryptRSA(idVote, resumen);
-		case 2:
-			resumen = AuxClass.getHashCodeSHA(textToEncypt);
-			result = AuxClass.encryptRSA(idVote, resumen);
-		}
-
+		result = AuxClass.encryptRSA(idVote, textToEncypt);
+			
 		return result;
 	}
 
@@ -68,35 +37,14 @@ public class AuthorityImpl implements Authority {
 		return result;
 	}
 
-	public void postKeyDES(String id) throws NoSuchAlgorithmException {
 
-		AuxClass.postKeyDES(id);
 
-	}
-
-	public SecretKey getKeyDES(String id) {
-		SecretKey result;
-
-		result = AuxClass.getKeyDES(id);
-
-		return result;
-
-	}
-
-	public byte[] encryptDES(String id, String text, int option) throws NoSuchAlgorithmException, IOException,
+	public byte[] encryptDES(String id, String text) throws NoSuchAlgorithmException, IOException,
 			InvalidKeyException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
 		byte[] result = null;
-		byte[] resumen = null;
-
-		switch (option) {
-		case 1:
-			resumen = AuxClass.getHashCodeMD5(text);
-			result = AuxClass.encryptDES(id, resumen);
-		case 2:
-			resumen = AuxClass.getHashCodeSHA(text);
-			result = AuxClass.encryptDES(id, resumen);
-		}
-
+	
+		result = AuxClass.encryptDES(id, text);
+		
 		return result;
 	}
 
@@ -108,5 +56,52 @@ public class AuthorityImpl implements Authority {
 
 		return result;
 	}
+
+	@Override
+	public byte[] getMD5(String text) {
+		byte[] result = null;
+		try {
+			result = AuxClass.getHashCodeMD5(text);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public byte[] getSHA1(String text) {
+		byte[] result = null;
+		try {
+			result = AuxClass.getHashCodeSHA(text);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public boolean checkVoteDes(String text, byte[] resumen) {
+		boolean res = false;
+		try {
+			byte[] md5 = AuxClass.getHashCodeMD5(text);
+			byte[] sha = AuxClass.getHashCodeSHA(text);
+			
+			if(resumen.equals(md5) || resumen.equals(sha)){
+				res  = true;
+			}
+		} catch (NoSuchAlgorithmException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return res;
+	}
+
 
 }

@@ -155,4 +155,43 @@ public class DataBaseManager {
         } 
         return res;
 	}
+	
+	//guardar resumen 
+	public String saveMD5SHA(String id, String resumen) {
+
+		String res = null;
+        try {
+        	Connection con = getConnection();
+            st = con.createStatement();
+            st.execute("Insert into HashFunction Values('"+id+"', '" + resumen + "' ) ");
+            
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+
+        } 
+        
+        return res;
+    }
+	
+	//recuperar resumen
+	public String getMD5SHA(String id) {
+
+		String res = null;
+        try {
+        	Connection con = getConnection();
+            st = con.createStatement();
+            rs = st.executeQuery("SELECT privateKey FROM HashFunction  WHERE idVotation = '"+id+"'");
+
+            if (rs.next()) {
+                res = rs.getString(1);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+
+        } 
+        return res;
+	}
+	
 }
