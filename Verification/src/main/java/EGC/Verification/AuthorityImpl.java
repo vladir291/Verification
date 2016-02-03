@@ -76,10 +76,8 @@ public class AuthorityImpl implements Authority {
 		try {
 			result = AuxClass.getHashCodeSHA(text);
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return result;
@@ -96,7 +94,6 @@ public class AuthorityImpl implements Authority {
 				res  = true;
 			}
 		} catch (NoSuchAlgorithmException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
