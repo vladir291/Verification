@@ -68,6 +68,8 @@ public class AuxClass {
 			
 	}
 	
+
+	
 	//funcion para generar clave DES y almacenarla en base de datos
 	// guarda el string de la secret key en base de datos
 	public static void postKeyDES(String id) throws NoSuchAlgorithmException{
@@ -93,7 +95,7 @@ public class AuxClass {
 	}
 	// cifrando en des, se le debe pasar el resumen(de una funcion resumen como MD5)
 	//como text
-	public static byte[] encryptDES(String id, byte[] text) 
+	public static byte[] encryptDES(String id, String text) 
 			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException{
 		Cipher cifrador = Cipher.getInstance("DES/ECB/PKCS5Padding");
 		// Algoritmo DES
@@ -103,7 +105,7 @@ public class AuxClass {
 		//inicializo en modo cifrado
 		cifrador.init(Cipher.ENCRYPT_MODE, key);
 		//paso texto a byte y cifro
-		byte[] textocifrado = cifrador.doFinal(text);
+		byte[] textocifrado = cifrador.doFinal(text.getBytes());
 		return textocifrado;
 	}
 	// el texto cifrado es la cadena resumen del texto original
@@ -122,7 +124,7 @@ public class AuxClass {
 	}
 	
 	//cifrado RSA
-	public static byte[] encryptRSA(String idVote,byte[] textToEncypt){
+	public static byte[] encryptRSA(String idVote,String text){
 		
 		byte[] res = null;
 		try {
@@ -136,7 +138,7 @@ public class AuxClass {
 			rsa.init(Cipher.ENCRYPT_MODE, pubKeyFromBytes);
 	    
 		
-			res = rsa.doFinal(textToEncypt);
+			res = rsa.doFinal(text.getBytes());
 		} catch (IllegalBlockSizeException | BadPaddingException | InvalidKeyException | InvalidKeySpecException | NoSuchAlgorithmException | NoSuchPaddingException e) {
 			
 			e.printStackTrace();
