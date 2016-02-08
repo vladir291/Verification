@@ -10,13 +10,13 @@ public class Prueba {
 			System.out.println("Guardado");
 		}
 		else{
-			System.out.println("Error al guardar");
+			System.out.println("Error al intentar guardar");
 		}
 		if(authority.postKeyRSA(String.valueOf(999))){
 			System.out.println("Guardado");
 		}
 		else{
-			System.out.println("Error al guardar");
+			System.out.println("Error al intentar guardar");
 		}
 		
 		String first = authority.getPublicKeyRSA(String.valueOf(1000));
