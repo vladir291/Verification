@@ -6,21 +6,21 @@ public class Prueba {
 		
 		Authority authority = new AuthorityImpl();
 		
-		if(authority.postKeyRSA(String.valueOf(-1))){
+		if(authority.postKeyRSA(String.valueOf(7000))){
 			System.out.println("Guardado");
 		}
 		else{
 			System.out.println("Error al guardar");
 		}
-		if(authority.postKeyRSA(String.valueOf(-5))){
+		if(authority.postKeyRSA(String.valueOf(300))){
 			System.out.println("Guardado");
 		}
 		else{
 			System.out.println("Error al guardar");
 		}
 		
-		String first = authority.getPublicKeyRSA(String.valueOf(1000));
-		String second = authority.getPrivateKeyRSA(String.valueOf(999));
+		String first = authority.getPublicKeyRSA(String.valueOf(450));
+		String second = authority.getPrivateKeyRSA(String.valueOf(478));
 		System.out.println(first);
 		System.out.println(second);
 		System.out.println(first.equals(second));
