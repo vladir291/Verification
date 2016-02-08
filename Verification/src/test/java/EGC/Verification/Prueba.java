@@ -6,7 +6,7 @@ public class Prueba {
 		
 		Authority authority = new AuthorityImpl();
 		
-		if(authority.postKeyRSA(String.valueOf(1000))){
+		if(authority.postKeyRSA(String.valueOf(1001))){
 			System.out.println("Guardado");
 		}
 		else{
