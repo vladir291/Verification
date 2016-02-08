@@ -6,13 +6,13 @@ public class Prueba {
 		
 		Authority authority = new AuthorityImpl();
 		
-		if(authority.postKeyRSA(String.valueOf(1500))){
+		if(authority.postKeyRSA(String.valueOf(-1))){
 			System.out.println("Guardado");
 		}
 		else{
 			System.out.println("Error al guardar");
 		}
-		if(authority.postKeyRSA(String.valueOf(830))){
+		if(authority.postKeyRSA(String.valueOf(-5))){
 			System.out.println("Guardado");
 		}
 		else{
