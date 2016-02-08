@@ -7,7 +7,7 @@ public class Prueba {
 		Authority authority = new AuthorityImpl();
 		
 		if(authority.postKeyRSA(String.valueOf(-1))){
-			System.out.println("VOTO GUARDADO");
+			System.out.println("Guardado");
 		}
 		else{
 			System.out.println("Error al guardar");
