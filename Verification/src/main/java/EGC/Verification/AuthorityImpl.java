@@ -41,12 +41,12 @@ public class AuthorityImpl implements Authority {
 
 	//obtener clave des
 	public SecretKey getKeyDes(){
-		return getKeyDes();
+		return AuxClass.returnKeyDes();
 	}
 	
 	//obtener claves rsa
 	public KeyPair getKeysRsa(){
-		return getKeysRsa();
+		return AuxClass.returnKeysRSA();
 	}
 
 	public byte[] encryptDES(SecretKey key, String text) throws NoSuchAlgorithmException, IOException,
@@ -70,41 +70,25 @@ public class AuthorityImpl implements Authority {
 	@Override
 	public byte[] getMD5(String text) {
 		byte[] result = null;
-		try {
-			result = AuxClass.getHashCodeMD5(text);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		result = AuxClass.getHashCodeMD5(text);
 		return result;
 	}
 
 	@Override
 	public byte[] getSHA1(String text) {
 		byte[] result = null;
-		try {
-			result = AuxClass.getHashCodeSHA(text);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		result = AuxClass.getHashCodeSHA(text);
 		return result;
 	}
 
 	@Override
 	public boolean checkVoteDes(String text, byte[] resumen) {
 		boolean res = false;
-		try {
-			byte[] md5 = AuxClass.getHashCodeMD5(text);
-			byte[] sha = AuxClass.getHashCodeSHA(text);
-			
-			if(resumen.equals(md5) || resumen.equals(sha)){
-				res  = true;
-			}
-		} catch (NoSuchAlgorithmException | IOException e) {
-			e.printStackTrace();
+		byte[] md5 = AuxClass.getHashCodeMD5(text);
+		byte[] sha = AuxClass.getHashCodeSHA(text);
+		
+		if(resumen.equals(md5) || resumen.equals(sha)){
+			res  = true;
 		}
 
 		return res;

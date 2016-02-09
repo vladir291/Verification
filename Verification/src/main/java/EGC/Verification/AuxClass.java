@@ -1,13 +1,10 @@
 package EGC.Verification;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
@@ -26,42 +23,33 @@ public class AuxClass {
 	
 	//funcion resumen con md5 (text indica el texto que se le aplicara la función resumen)
 	//hay que pasarle el texto, no el atajo
-	public static byte[] getHashCodeMD5(String text) throws IOException, NoSuchAlgorithmException{
-		/* Crear funcion resumen */
-		MessageDigest md = MessageDigest.getInstance("MD5"); // Usa MD5
-		/* Leer fichero de 1k en 1k y pasar fragmentos leidos a la funcion resumen */
-		byte[] buffer = new byte[1000];
-		FileInputStream in = new FileInputStream(text);
-		int leidos = in.read(buffer, 0, 1000);
-		while (leidos != -1) {
-			md.update(buffer, 0 , leidos); // Pasa texto claro a la funcion resumen
-			leidos = in.read(buffer, 0, 1000);
-		}
-		in.close();
-			
-		byte[] resumen = md.digest(); // Completar el resumen
-		return resumen;
+	public static byte[] getHashCodeMD5(String text){
+		byte[] resumen = null;
+		 MessageDigest messageDigest = null;
+		try {
+			messageDigest = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} 
+		  messageDigest.update(text.getBytes());
+		  resumen = messageDigest.digest();
+		 return resumen;
 		
 	}
 	
 	//funcion resumen con SHA-1 (text indica el texto que se le aplicara la función resumen)
 	//hay que pasarle el texto, no el atajo
-	public static byte[] getHashCodeSHA(String text) throws IOException, NoSuchAlgorithmException{
-		/* Crear funcion resumen */
-		MessageDigest md = MessageDigest.getInstance("SHA"); // Usa SHA-1
-		/* Leer fichero de 1k en 1k y pasar fragmentos leidos a la funcion resumen */
-		byte[] buffer = new byte[1000];
-		FileInputStream in = new FileInputStream(text);
-		int leidos = in.read(buffer, 0, 1000);
-		while (leidos != -1) {
-			md.update(buffer, 0 , leidos); // Pasa texto claro a la funcion resumen
-			leidos = in.read(buffer, 0, 1000);
-		}
-		in.close();
-			
-		byte[] resumen = md.digest(); // Completar el resumen
-		return resumen;
-			
+	public static byte[] getHashCodeSHA(String text){
+		byte[] resumen = null;
+		 MessageDigest messageDigest = null;
+		try {
+			messageDigest = MessageDigest.getInstance("SHA");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} 
+		  messageDigest.update(text.getBytes());
+		  resumen = messageDigest.digest();
+		 return resumen;
 	}
 	
 
@@ -79,14 +67,26 @@ public class AuxClass {
 	}
 	
 	//genera una clave para DES y la devuelve
-	public static SecretKey returnKeyDes() throws NoSuchAlgorithmException{
-		KeyGenerator generadorDES = KeyGenerator.getInstance("DES");
+	public static SecretKey returnKeyDes(){
+		KeyGenerator generadorDES = null;
+		try {
+			generadorDES = KeyGenerator.getInstance("DES");
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		generadorDES.init(56); // clave de 56 bits
 		SecretKey clave = generadorDES.generateKey();
 		return clave;
 	}
-	public static KeyPair returnKeysRSA() throws NoSuchAlgorithmException, NoSuchProviderException{
-	KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA", "BC"); // Hace uso del provider BC
+	public static KeyPair returnKeysRSA(){
+	KeyPairGenerator keyGen = null;
+	try {
+		keyGen = KeyPairGenerator.getInstance("RSA");
+	} catch (NoSuchAlgorithmException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
     keyGen.initialize(512);  // tamano clave 512 bits
     KeyPair clavesRSA = keyGen.generateKeyPair();
     return clavesRSA;
