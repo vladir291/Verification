@@ -3,18 +3,14 @@ package EGC.Verification;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.InvalidKeyException;
-import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 import javax.crypto.BadPaddingException;
@@ -82,6 +78,21 @@ public class AuxClass {
 		
 	}
 	
+	//genera una clave para DES y la devuelve
+	public static SecretKey returnKeyDes() throws NoSuchAlgorithmException{
+		KeyGenerator generadorDES = KeyGenerator.getInstance("DES");
+		generadorDES.init(56); // clave de 56 bits
+		SecretKey clave = generadorDES.generateKey();
+		return clave;
+	}
+	public static KeyPair returnKeysRSA() throws NoSuchAlgorithmException, NoSuchProviderException{
+	KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA", "BC"); // Hace uso del provider BC
+    keyGen.initialize(512);  // tamano clave 512 bits
+    KeyPair clavesRSA = keyGen.generateKeyPair();
+    return clavesRSA;
+	}
+	
+	
 	//recuperar clave "string" de la base de datos y devolverla como SecretKey
 	public static SecretKey getKeyDES(String id){
 		
@@ -95,13 +106,12 @@ public class AuxClass {
 	}
 	// cifrando en des, se le debe pasar el resumen(de una funcion resumen como MD5)
 	//como text
-	public static byte[] encryptDES(String id, String text) 
+	public static byte[] encryptDES(SecretKey key, String text) 
 			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException{
 		Cipher cifrador = Cipher.getInstance("DES/ECB/PKCS5Padding");
 		// Algoritmo DES
 		// Modo : ECB (Electronic Code Book)
 		// Relleno : PKCS5Padding
-		SecretKey key = getKeyDES(id);
 		//inicializo en modo cifrado
 		cifrador.init(Cipher.ENCRYPT_MODE, key);
 		//paso texto a byte y cifro
@@ -109,13 +119,12 @@ public class AuxClass {
 		return textocifrado;
 	}
 	// el texto cifrado es la cadena resumen del texto original
-	public static String decryptDES(String id, byte[] textcifrado) 
+	public static String decryptDES(SecretKey key, byte[] textcifrado) 
 			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException{
 		Cipher cifrador = Cipher.getInstance("DES/ECB/PKCS5Padding");
 		// Algoritmo DES
 		// Modo : ECB (Electronic Code Book)
 		// Relleno : PKCS5Padding
-		SecretKey key = getKeyDES(id);
 		//inicializo en modo DEScifrado (QUE CHISTOSO SOY!!)
 		cifrador.init(Cipher.DECRYPT_MODE, key);
 		//paso cadena byte[] y descifro
@@ -124,22 +133,20 @@ public class AuxClass {
 	}
 	
 	//cifrado RSA
-	public static byte[] encryptRSA(String idVote,String text){
+	public static byte[] encryptRSA(KeyPair keys,String text){
 		
 		byte[] res = null;
 		try {
 			Cipher rsa;
-			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-			KeySpec keySpec = new X509EncodedKeySpec(DatatypeConverter.parseBase64Binary(getPublicKeyRSA(idVote)));
 			
-			PublicKey pubKeyFromBytes = keyFactory.generatePublic(keySpec);
+			PublicKey pubKey = keys.getPublic();
 			
 			rsa = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-			rsa.init(Cipher.ENCRYPT_MODE, pubKeyFromBytes);
+			rsa.init(Cipher.ENCRYPT_MODE, pubKey);
 	    
 		
 			res = rsa.doFinal(text.getBytes());
-		} catch (IllegalBlockSizeException | BadPaddingException | InvalidKeyException | InvalidKeySpecException | NoSuchAlgorithmException | NoSuchPaddingException e) {
+		} catch (IllegalBlockSizeException | BadPaddingException | InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException e) {
 			
 			e.printStackTrace();
 		} 
@@ -148,15 +155,13 @@ public class AuxClass {
 	}
 	
 	//descifrado RSA
-	public static String decryptRSA(String idVote,byte[] cipherText) throws BadPaddingException{
+	public static String decryptRSA(KeyPair keys,byte[] cipherText) throws BadPaddingException{
 		
 		String res = null;
 		try {
 			Cipher rsa;
-			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-			KeySpec keySpec = new PKCS8EncodedKeySpec(DatatypeConverter.parseBase64Binary(getPrivateKeyRSA(idVote)));
 			
-			PrivateKey privKeyFromBytes = keyFactory.generatePrivate(keySpec);
+			PrivateKey privKeyFromBytes = keys.getPrivate();
 			
 			rsa = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 			rsa.init(Cipher.DECRYPT_MODE, privKeyFromBytes);
@@ -165,7 +170,7 @@ public class AuxClass {
 		
 			byte[] bytesDesencriptados = rsa.doFinal(cipherText);
 		    res = new String(bytesDesencriptados);
-		} catch (IllegalBlockSizeException  | InvalidKeyException | InvalidKeySpecException | NoSuchAlgorithmException | NoSuchPaddingException e) {
+		} catch (IllegalBlockSizeException  | InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException e) {
 			
 			e.printStackTrace();
 		}
@@ -224,11 +229,11 @@ public class AuxClass {
 	}
 
 	
-	public static boolean checkVoteRSA(byte[] votoCifrado, String id) {
+	public static boolean checkVoteRSA(byte[] votoCifrado, KeyPair key) {
 		
 		boolean res = true;
 		try {
-			decryptRSA(id, votoCifrado);
+			decryptRSA(key, votoCifrado);
 		} catch (BadPaddingException e) {
 			res = false;
 		}

@@ -2,57 +2,67 @@ package EGC.Verification;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
+import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 
 public class AuthorityImpl implements Authority {
 
 	
 
-	public boolean checkVoteRSA(byte[] votoCifrado, String id) {
+	public boolean checkVoteRSA(byte[] votoCifrado, KeyPair key) {
 		boolean result;
 
-		result = AuxClass.checkVoteRSA(votoCifrado, id);
+		result = AuxClass.checkVoteRSA(votoCifrado, key);
 
 		return result;
 	}
 
-	public byte[] encryptRSA(String idVote, String textToEncypt)
+	public byte[] encryptRSA(KeyPair key, String textToEncypt)
 			throws NoSuchAlgorithmException, IOException {
 		byte[] result = null;
 
-		result = AuxClass.encryptRSA(idVote, textToEncypt);
+		result = AuxClass.encryptRSA(key, textToEncypt);
 			
 		return result;
 	}
 
-	public String decryptRSA(String idVote, byte[] cipherText) throws BadPaddingException {
+	public String decryptRSA(KeyPair key, byte[] cipherText) throws BadPaddingException {
 		String result;
 
-		result = AuxClass.decryptRSA(idVote, cipherText);
+		result = AuxClass.decryptRSA(key, cipherText);
 
 		return result;
 	}
 
+	//obtener clave des
+	public SecretKey getKeyDes(){
+		return getKeyDes();
+	}
+	
+	//obtener claves rsa
+	public KeyPair getKeysRsa(){
+		return getKeysRsa();
+	}
 
-
-	public byte[] encryptDES(String id, String text) throws NoSuchAlgorithmException, IOException,
+	public byte[] encryptDES(SecretKey key, String text) throws NoSuchAlgorithmException, IOException,
 			InvalidKeyException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
 		byte[] result = null;
 	
-		result = AuxClass.encryptDES(id, text);
+		result = AuxClass.encryptDES(key, text);
 		
 		return result;
 	}
 
-	public String decryptDES(String id, byte[] textCifrado) throws InvalidKeyException, NoSuchAlgorithmException,
+	public String decryptDES(SecretKey key, byte[] textCifrado) throws InvalidKeyException, NoSuchAlgorithmException,
 			NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
 		String result;
 
-		result = AuxClass.decryptDES(id, textCifrado);
+		result = AuxClass.decryptDES(key, textCifrado);
 
 		return result;
 	}
